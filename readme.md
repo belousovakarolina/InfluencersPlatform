@@ -20,9 +20,10 @@ Platformoje įmonės gali ieškoti tinkamų nuomonės formuotojų, skaitydami es
 * Nuomonės formuotojo profilis: primary key id, external id userId, string name, string description, int igFollowersCount, int fbFollowersCount, external id category. 
     * Galima grąžinti visus atsiliepimus apie šį nuomonės formuotoją.
 * Įmonės profilis: primary key id, external id userId, string name, string description, float yearlyIncome
+    * Galima grąžinti visus atsiliepimus, kuriuos parašė ši įmonė.
 * Atsiliepimas: primary key id, external id influencerId, external id companyId, string description, int stars, boolean verified
 * Kategorija: primary key id, string name. 
-    * Čia skirstomi nuomonės formuotojai pagal dydį (mini, standard, mega nuomonės formuotojai)
+    * Čia skirstomi nuomonės formuotojai pagal dydį (maži, standartinio dydžio, dideli nuomonės formuotojai)
 
 ## Rolės:
 
