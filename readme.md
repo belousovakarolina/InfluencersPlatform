@@ -20,7 +20,7 @@ Platformoje įmonės gali ieškoti tinkamų nuomonės formuotojų, skaitydami es
 * Nuomonės formuotojo profilis: primary key id, external id userId, string name, string description, int igFollowersCount, int fbFollowersCount
 * Įmonės profilis: primary key id, external id userId, string name, string desfription, float yearlyIncome
 * Atsiliepimas: primary key id, external id influencerId, external id companyId, string description, int stars, boolean verified
-* Žinutė: kol kas neprivaloma
+* Kategorija: primary key id, string name
 
 ## Rolės:
 
