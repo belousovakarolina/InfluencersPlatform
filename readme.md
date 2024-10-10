@@ -17,7 +17,7 @@ Platformoje įmonės gali ieškoti tinkamų nuomonės formuotojų, skaitydami es
 
 ## Objektai:
 
-* Nuomonės formuotojo profilis: primary key id, external id userId, string name, string description, int igFollowersCount, int fbFollowersCount, external id category. 
+* Nuomonės formuotojo profilis: primary key id, external id userId, string name, string description, int igFollowersCount, int fbFollowersCount, int tiktokFollowersCount, external id category. 
     * Galima grąžinti visus atsiliepimus apie šį nuomonės formuotoją.
 * Įmonės profilis: primary key id, external id userId, string name, string description, float yearlyIncome
     * Galima grąžinti visus atsiliepimus, kuriuos parašė ši įmonė.
@@ -27,6 +27,5 @@ Platformoje įmonės gali ieškoti tinkamų nuomonės formuotojų, skaitydami es
 
 ## Rolės:
 
-* Nuomonės formuotojas: primary key id, string username, string email, string password
-* Įmonė: primary key id, string username, string emai, string password
-* Administratorius: primary key id, string username, string email, string password
+* Rolės: Nuomonės formuotojas, Įmonė, Administratorius
+* Visi useriai turi: primary key id, string username, string email, string password, boolean isDeleted
