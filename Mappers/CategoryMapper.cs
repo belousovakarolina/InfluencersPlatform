@@ -17,7 +17,7 @@ namespace InfluencersPlatformBackend.Mappers
             };
         }
 
-        public static Category FromCreateCategoryRequestToCategory (this CreateCategoryRequest createCategoryRequest)
+        public static Category FromCreateCategoryRequestToCategory (this CreateCategoryRequestDTO createCategoryRequest)
         {
             return new Category
             {

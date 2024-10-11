@@ -40,12 +40,12 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest newCategoryRequest)
+        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequestDTO newCategoryRequest)
         {
             var category = newCategoryRequest.FromCreateCategoryRequestToCategory();
              _context.Categories.Add(category);
-            await _context.SaveChanges();
-            return Ok(category);
+             await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetCategory), new { id = category.Id}, category.ToCategoryDTO());
         }
     }
 }
