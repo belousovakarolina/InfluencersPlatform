@@ -1,6 +1,8 @@
 ﻿using InfluencersPlatformBackend.Data;
+using InfluencersPlatformBackend.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace InfluencersPlatformBackend.Controllers
 {
@@ -21,13 +23,15 @@ namespace InfluencersPlatformBackend.Controllers
             if (category == null)
                 return NotFound();
 
-            return Ok(category);
+            return Ok(category.ToCategoryDTO());
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCategoryList()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories
+                .Select(s => s.ToCategoryDTO()).ToListAsync(); 
+
             if (categories == null)
                 return NotFound();
 
