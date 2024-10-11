@@ -13,7 +13,7 @@
         public int? FbFollowerCount { get; set; }
         public int? TiktokFollowerCount { get; set; }
         public List<Review> Reviews { get; set; } = new List<Review>();
-        public InfluencerProfile(int id, int userId) { }
+        public InfluencerProfile() { }
         
     }
 }

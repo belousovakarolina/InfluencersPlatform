@@ -13,6 +13,8 @@ namespace InfluencersPlatformBackend.Models
         public string Description { get; set; }
         public int? Stars { get; set; }
         public bool Verified { get; set; }
+        public bool IsAboutInfluencer { get; set; } //is this review from a company about 
+        //a influencer or vice versa?
         public DateTime CreatedDate {  get; set; } =  DateTime.Now; 
 
         public Review() { }
