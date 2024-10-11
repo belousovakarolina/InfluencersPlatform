@@ -1,6 +1,6 @@
 ﻿using InfluencersPlatformBackend.Models;
 
-namespace InfluencersPlatformBackend.DTOs
+namespace InfluencersPlatformBackend.DTOs.CategoryDTOs
 {
     public class CategoryDTO
     {

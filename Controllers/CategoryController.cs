@@ -1,4 +1,5 @@
 ﻿using InfluencersPlatformBackend.Data;
+using InfluencersPlatformBackend.DTOs.CategoryDTOs;
 using InfluencersPlatformBackend.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,15 @@ namespace InfluencersPlatformBackend.Controllers
                 return NotFound();
 
             return Ok(categories);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest newCategoryRequest)
+        {
+            var category = newCategoryRequest.FromCreateCategoryRequestToCategory();
+             _context.Categories.Add(category);
+            await _context.SaveChanges();
+            return Ok(category);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace InfluencersPlatformBackend.DTOs
+﻿namespace InfluencersPlatformBackend.DTOs.UserDTOs
 {
     public class UserDTO
     {

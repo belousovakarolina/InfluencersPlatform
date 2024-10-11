@@ -1,4 +1,4 @@
-﻿using InfluencersPlatformBackend.DTOs;
+﻿using InfluencersPlatformBackend.DTOs.CompanyProfileDTOs;
 using InfluencersPlatformBackend.Models;
 
 namespace InfluencersPlatformBackend.Mappers

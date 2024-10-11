@@ -1,4 +1,4 @@
-﻿using InfluencersPlatformBackend.DTOs;
+﻿using InfluencersPlatformBackend.DTOs.CategoryDTOs;
 using InfluencersPlatformBackend.Models;
 
 namespace InfluencersPlatformBackend.Mappers
@@ -14,6 +14,16 @@ namespace InfluencersPlatformBackend.Mappers
                 FollowersCountFrom = category.FollowersCountFrom,
                 FollowersCountTo = category.FollowersCountTo,
                 Influencers = category.Influencers
+            };
+        }
+
+        public static Category FromCreateCategoryRequestToCategory (this CreateCategoryRequest createCategoryRequest)
+        {
+            return new Category
+            {
+                Name = createCategoryRequest.Name,
+                FollowersCountFrom = createCategoryRequest.FollowersCountFrom,
+                FollowersCountTo = createCategoryRequest.FollowersCountTo
             };
         }
     }
