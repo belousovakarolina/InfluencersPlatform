@@ -27,7 +27,7 @@ namespace InfluencersPlatformBackend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCategoryList()
         {
-            var categories = await _context.Categories.FindAsync();
+            var categories = await _context.Categories.ToListAsync();
             if (categories == null)
                 return NotFound();
 

@@ -8,6 +8,7 @@
         public string Password { get; set; }
         public string Phone { get; set; }
  
+        public Boolean IsDeleted { get; set; }
         public User() { }
     }
 }
