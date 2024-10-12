@@ -43,6 +43,11 @@ namespace InfluencersPlatformBackend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequestDTO newCategoryRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Return validation errors if any
+            }
+
             var category = newCategoryRequest.FromCreateCategoryRequestToCategory();
              _context.Categories.Add(category);
              await _context.SaveChangesAsync();

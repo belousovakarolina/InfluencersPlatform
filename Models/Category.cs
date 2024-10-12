@@ -1,4 +1,6 @@
-﻿namespace InfluencersPlatformBackend.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace InfluencersPlatformBackend.Models
 {
     //ypac dideli - 1 000 001
     //dideli - 100 001 - 1 000 000
