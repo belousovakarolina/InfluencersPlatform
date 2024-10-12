@@ -2,13 +2,12 @@
 
 namespace InfluencersPlatformBackend.DTOs.CategoryDTOs
 {
-    public class CategoryDTO
+    public class GetCategoryRequestDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public int FollowersCountFrom { get; set; }
         public int FollowersCountTo { get; set; }
-        public List<InfluencerProfile> Influencers { get; set; }
-        public CategoryDTO() { }
+        public GetCategoryRequestDTO() { }
     }
 }

@@ -67,6 +67,7 @@ namespace InfluencersPlatformBackend.Controllers
             var category = _context.Categories.FirstOrDefault(c => c.Id == id);
 
             if (category == null) return NotFound();
+            //TODO: if this category has influencers, move them to undefined category
 
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
