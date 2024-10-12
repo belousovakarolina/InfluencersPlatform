@@ -2,7 +2,6 @@
 {
     //ypac dideli - 1 000 001
     //dideli - 100 001 - 1 000 000
-    //vidutino dydzio - 5 001 - 100 000
     public class Category
     {
         public int Id { get; set; }

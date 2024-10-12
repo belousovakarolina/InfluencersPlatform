@@ -1,5 +1,6 @@
 ﻿using InfluencersPlatformBackend.DTOs.CategoryDTOs;
 using InfluencersPlatformBackend.Models;
+using System.Runtime.CompilerServices;
 
 namespace InfluencersPlatformBackend.Mappers
 {
@@ -25,6 +26,15 @@ namespace InfluencersPlatformBackend.Mappers
                 FollowersCountFrom = createCategoryRequest.FollowersCountFrom,
                 FollowersCountTo = createCategoryRequest.FollowersCountTo
             };
+        }
+
+        public static Category FromPutCategoryRequestToCategory(this PutCategoryRequestDTO putCategoryRequest, Category toUpdate)
+        {
+            toUpdate.Name = putCategoryRequest.Name;
+            toUpdate.FollowersCountFrom = putCategoryRequest.FollowersCountFrom;
+            toUpdate.FollowersCountTo = putCategoryRequest.FollowersCountTo;
+
+            return toUpdate;
         }
     }
 }

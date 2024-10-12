@@ -1,6 +1,7 @@
 ﻿using InfluencersPlatformBackend.Data;
 using InfluencersPlatformBackend.DTOs.CategoryDTOs;
 using InfluencersPlatformBackend.Mappers;
+using InfluencersPlatformBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -46,6 +47,18 @@ namespace InfluencersPlatformBackend.Controllers
              _context.Categories.Add(category);
              await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCategory), new { id = category.Id}, category.ToCategoryDTO());
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateWholeCategory([FromRoute] int id, [FromBody] PutCategoryRequestDTO categoryDTO)
+        {
+            var category = _context.Categories.FirstOrDefault(c => c.Id == id);
+
+            if (category == null) return NotFound();
+
+            category = categoryDTO.FromPutCategoryRequestToCategory(category);
+            await _context.SaveChangesAsync();
+            return Ok(category.ToCategoryDTO());
         }
     }
 }
