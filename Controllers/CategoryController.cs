@@ -60,5 +60,18 @@ namespace InfluencersPlatformBackend.Controllers
             await _context.SaveChangesAsync();
             return Ok(category.ToCategoryDTO());
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategory([FromRoute] int id)
+        {
+            var category = _context.Categories.FirstOrDefault(c => c.Id == id);
+
+            if (category == null) return NotFound();
+
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
