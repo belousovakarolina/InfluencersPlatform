@@ -41,6 +41,25 @@ namespace InfluencersPlatformBackend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCompanyProfile([FromBody] CreateCompanyProfileRequestDTO newCompanyProfileRequest)
         {
+            //TODO: ar yra useris su tokiu user id?
+            //TODO: ar useris su tokiu user id turi role influencer?
+            var User = await _context.Users.FindAsync(newCompanyProfileRequest.UserId);
+            if (User == null)
+            { 
+                return NotFound(new
+                {
+                    message = "User not found."
+                });
+            }
+
+            if (User.Role != "Company")
+            {
+                // Return 422 Unprocessable Entity with a custom message
+                return UnprocessableEntity(new
+                {
+                    message = "User must have a permission to create Company Profile."
+                });
+            }
             var CompanyProfile = newCompanyProfileRequest.FromCreateCompanyProfileRequestToCompanyProfile();
             _context.CompanyProfiles.Add(CompanyProfile);
             await _context.SaveChangesAsync();
@@ -56,6 +75,25 @@ namespace InfluencersPlatformBackend.Controllers
 
             CompanyProfile = CompanyProfileDTO.FromPutCompanyProfileRequestToCompanyProfile(CompanyProfile);
             await _context.SaveChangesAsync();
+            return Ok(CompanyProfile.ToCompanyProfileDTO());
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateCompanyProfilePartially([FromRoute] int id, [FromBody] PatchCompanyProfileRequestDTO patchCompanyProfileDTO)
+        {
+            // Retrieve the CompanyProfile from the database
+            var CompanyProfile = await _context.CompanyProfiles.FirstOrDefaultAsync(c => c.Id == id);
+
+            // If the CompanyProfile is not found, return 404 Not Found
+            if (CompanyProfile == null) return NotFound();
+
+            // Only update the fields that are not null in the patch request
+            CompanyProfile = patchCompanyProfileDTO.FromPatchCompanyProfileRequestToCompanyProfile(CompanyProfile);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            // Return the updated CompanyProfile
             return Ok(CompanyProfile.ToCompanyProfileDTO());
         }
 

@@ -3,6 +3,8 @@ using InfluencersPlatformBackend.DTOs.UserDTOs;
 using InfluencersPlatformBackend.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace InfluencersPlatformBackend.Controllers
 {
@@ -41,6 +43,27 @@ namespace InfluencersPlatformBackend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDTO newUserRequest)
         {
+            if (newUserRequest.Role != "Administrator" && 
+                newUserRequest.Role != "Influencer" &&
+                newUserRequest.Role != "Company")
+                return UnprocessableEntity(new
+                {
+                    message = "User must be one of these roles: Administrator, Influencer, Company."
+                });
+
+            if (!newUserRequest.Phone.StartsWith("3706") |
+                newUserRequest.Phone.Length != 11)
+                return UnprocessableEntity(new
+                {
+                    message = "Phone must start with 370 and have 11 characters in total."
+                });
+
+            if (!Regex.IsMatch(newUserRequest.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                return UnprocessableEntity(new
+                {
+                    message = "Email must not have blank spaces, must have '@' symbol and a domain ending."
+                });
+
             var User = newUserRequest.FromCreateUserRequestToUser();
             _context.Users.Add(User);
             await _context.SaveChangesAsync();
@@ -50,6 +73,26 @@ namespace InfluencersPlatformBackend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateWholeUser([FromRoute] int id, [FromBody] PutUserRequestDTO UserDTO)
         {
+            if (UserDTO.Role != "Administrator" &&
+                UserDTO.Role != "Influencer" &&
+                UserDTO.Role != "Company")
+                return UnprocessableEntity(new
+                {
+                    message = "User must be one of these roles: Administrator, Influencer, Company."
+                });
+
+            if (UserDTO.CompanyProfileId  != null && UserDTO.Role != "Company")
+                return UnprocessableEntity(new
+                {
+                    message = "Can only add a Company Profile for a user with a Company role."
+                });
+
+            if (UserDTO.InfluencerProfileId != null && UserDTO.Role != "Influencer")
+                return UnprocessableEntity(new
+                {
+                    message = "Can only add an Influencer Profile for a user with an Influencer role."
+                });
+
             var User = _context.Users.FirstOrDefault(c => c.Id == id);
 
             if (User == null) return NotFound();
@@ -64,9 +107,14 @@ namespace InfluencersPlatformBackend.Controllers
         {
             var User = _context.Users.FirstOrDefault(c => c.Id == id);
 
-            if (User == null) return NotFound();
+            if (User == null || User.IsDeleted) 
+                return NotFound();
 
-            _context.Users.Remove(User);
+            // Mark the user as deleted
+            User.IsDeleted = true;
+
+            // Save the changes to the database
+            _context.Users.Update(User);
             await _context.SaveChangesAsync();
 
             return NoContent();

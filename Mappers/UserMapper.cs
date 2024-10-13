@@ -14,7 +14,9 @@ namespace InfluencersPlatformBackend.Mappers
                 Name = user.Name,
                 Email = user.Email,
                 Phone = user.Phone,
-                Roles = user.Roles
+                InfluencerProfileId = user.InfluencerProfileId.HasValue ? (int)user.InfluencerProfileId : (int?)null,
+                CompanyProfileId = user.CompanyProfileId.HasValue ? (int)user.CompanyProfileId : (int?)null,
+                Role = user.Role
             };
         }
 
@@ -26,7 +28,7 @@ namespace InfluencersPlatformBackend.Mappers
                 Email = userDTO.Email,
                 Password = userDTO.Password,
                 Phone = userDTO.Phone,
-                Roles = userDTO.Roles
+                Role = userDTO.Role
             };
         }
 
@@ -37,7 +39,11 @@ namespace InfluencersPlatformBackend.Mappers
             toUpdate.Password = userDTO.Password;
             toUpdate.Phone = userDTO.Phone;
             toUpdate.IsDeleted = userDTO.IsDeleted;
-            toUpdate.Roles = userDTO.Roles;
+            if (userDTO.InfluencerProfileId != null)
+                toUpdate.InfluencerProfileId = userDTO.InfluencerProfileId;
+            if (userDTO.CompanyProfileId != null)
+                toUpdate.CompanyProfileId = userDTO.CompanyProfileId;
+            toUpdate.Role = userDTO.Role;
 
             return toUpdate;
         }
