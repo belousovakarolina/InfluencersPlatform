@@ -1,6 +1,7 @@
 ﻿using InfluencersPlatformBackend.Data;
 using InfluencersPlatformBackend.DTOs.CompanyProfileDTOs;
 using InfluencersPlatformBackend.Mappers;
+using InfluencersPlatformBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -115,8 +116,13 @@ namespace InfluencersPlatformBackend.Controllers
 
             if (CompanyProfile == null) return NotFound();
 
+            var User = await _context.Users.FindAsync(CompanyProfile.UserId);
+
             _context.CompanyProfiles.Remove(CompanyProfile);
-            //TODO: user??
+
+            if (User != null)
+                User.IsDeleted = true;
+
             await _context.SaveChangesAsync();
 
             return NoContent();
