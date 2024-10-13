@@ -59,6 +59,26 @@ namespace InfluencersPlatformBackend.Controllers
             return Ok(Review.ToReviewDTO());
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateReviewPartially([FromRoute] int id, [FromBody] PatchReviewRequestDTO patchReviewDTO)
+        {
+
+            // Retrieve the Review from the database
+            var Review = await _context.Reviews.FirstOrDefaultAsync(c => c.Id == id);
+
+            // If the Review is not found, return 404 Not Found
+            if (Review == null) return NotFound();
+
+            // Only update the fields that are not null in the patch request
+            Review = patchReviewDTO.FromPatchReviewReqestToReview(Review);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            // Return the updated Review
+            return Ok(Review.ToReviewDTO());
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReview([FromRoute] int id)
         {

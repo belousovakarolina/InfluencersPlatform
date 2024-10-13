@@ -59,6 +59,25 @@ namespace InfluencersPlatformBackend.Controllers
             return Ok(InfluencerProfile.ToInfluencerProfileDTO());
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateInfluencerProfilePartially([FromRoute] int id, [FromBody] PatchInfluencerProfileRequestDTO patchInfluencerProfileDTO)
+        {
+            // Retrieve the InfluencerProfile from the database
+            var InfluencerProfile = await _context.InfluencerProfiles.FirstOrDefaultAsync(c => c.Id == id);
+
+            // If the InfluencerProfile is not found, return 404 Not Found
+            if (InfluencerProfile == null) return NotFound();
+
+            // Only update the fields that are not null in the patch request
+            InfluencerProfile = patchInfluencerProfileDTO.FromPatchInfluencerProfileRequestToInfluencerProfile(InfluencerProfile);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            // Return the updated InfluencerProfile
+            return Ok(InfluencerProfile.ToInfluencerProfileDTO());
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInfluencerProfile([FromRoute] int id)
         {

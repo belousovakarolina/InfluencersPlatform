@@ -73,25 +73,6 @@ namespace InfluencersPlatformBackend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateWholeUser([FromRoute] int id, [FromBody] PutUserRequestDTO UserDTO)
         {
-            if (UserDTO.Role != "Administrator" &&
-                UserDTO.Role != "Influencer" &&
-                UserDTO.Role != "Company")
-                return UnprocessableEntity(new
-                {
-                    message = "User must be one of these roles: Administrator, Influencer, Company."
-                });
-
-            if (UserDTO.CompanyProfileId  != null && UserDTO.Role != "Company")
-                return UnprocessableEntity(new
-                {
-                    message = "Can only add a Company Profile for a user with a Company role."
-                });
-
-            if (UserDTO.InfluencerProfileId != null && UserDTO.Role != "Influencer")
-                return UnprocessableEntity(new
-                {
-                    message = "Can only add an Influencer Profile for a user with an Influencer role."
-                });
 
             var User = _context.Users.FirstOrDefault(c => c.Id == id);
 
@@ -99,6 +80,25 @@ namespace InfluencersPlatformBackend.Controllers
 
             User = UserDTO.FromPutUserRequestToUser(User);
             await _context.SaveChangesAsync();
+            return Ok(User.ToUserDTO());
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateUserPartially([FromRoute] int id, [FromBody] PatchUserRequestDTO patchUserDTO)
+        {
+            // Retrieve the User from the database
+            var User = await _context.Users.FirstOrDefaultAsync(c => c.Id == id);
+
+            // If the User is not found, return 404 Not Found
+            if (User == null) return NotFound();
+
+            // Only update the fields that are not null in the patch request
+            User = patchUserDTO.FromPatchUserRequestToUser(User);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            // Return the updated User
             return Ok(User.ToUserDTO());
         }
 

@@ -39,12 +39,22 @@ namespace InfluencersPlatformBackend.Mappers
             toUpdate.Password = userDTO.Password;
             toUpdate.Phone = userDTO.Phone;
             toUpdate.IsDeleted = userDTO.IsDeleted;
-            if (userDTO.InfluencerProfileId != null)
-                toUpdate.InfluencerProfileId = userDTO.InfluencerProfileId;
-            if (userDTO.CompanyProfileId != null)
-                toUpdate.CompanyProfileId = userDTO.CompanyProfileId;
-            toUpdate.Role = userDTO.Role;
 
+            return toUpdate;
+        }
+
+        public static User FromPatchUserRequestToUser (this PatchUserRequestDTO userDTO, User toUpdate)
+        {
+            if (userDTO.Name != null)
+                toUpdate.Name = userDTO.Name;
+            if (userDTO.Email != null) 
+                toUpdate.Email = userDTO.Email;
+            if (userDTO.Password != null) 
+                toUpdate.Password = userDTO.Password;
+            if (userDTO.Phone != null) 
+                toUpdate.Phone = userDTO.Phone;
+            if (userDTO.IsDeleted != null) 
+                toUpdate.IsDeleted = (bool)userDTO.IsDeleted;
             return toUpdate;
         }
     }

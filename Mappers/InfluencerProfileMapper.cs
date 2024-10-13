@@ -45,5 +45,23 @@ namespace InfluencersPlatformBackend.Mappers
 
             return toUpdate;
         }
+
+        public static InfluencerProfile FromPatchInfluencerProfileRequestToInfluencerProfile(this PatchInfluencerProfileRequestDTO influencerDTO, InfluencerProfile toUpdate)
+        {
+            if (influencerDTO.CategoryId != null)
+                toUpdate.CategoryId = influencerDTO.CategoryId;
+            if (influencerDTO.Name != null)
+                toUpdate.Name = influencerDTO.Name;
+            if (influencerDTO.Description != null)
+                toUpdate.Description = influencerDTO.Description;
+            if (influencerDTO.FbFollowerCount != null)
+                toUpdate.FbFollowerCount = influencerDTO.FbFollowerCount;
+            if (influencerDTO.IgFollowerCount != null)
+                toUpdate.IgFollowerCount = influencerDTO?.IgFollowerCount;
+            if (influencerDTO.TiktokFollowerCount != null)
+                toUpdate.TiktokFollowerCount = influencerDTO.TiktokFollowerCount;
+
+            return toUpdate;
+        }
     }
 }

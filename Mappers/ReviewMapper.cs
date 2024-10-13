@@ -45,5 +45,19 @@ namespace InfluencersPlatformBackend.Mappers
 
             return toUpdate;
         }
+
+        public static Review FromPatchReviewReqestToReview (this PatchReviewRequestDTO reviewDTO, Review toUpdate)
+        {
+            if (reviewDTO.Name != null)
+                toUpdate.Name = reviewDTO.Name;
+            if (reviewDTO.Description != null)
+                toUpdate.Description = reviewDTO.Description;
+            if (reviewDTO.Stars != null)
+                toUpdate.Stars = reviewDTO.Stars;
+            if (reviewDTO.Verified != null)
+                toUpdate.Verified = (bool)reviewDTO.Verified;
+
+            return toUpdate;
+        }
     }
 }
