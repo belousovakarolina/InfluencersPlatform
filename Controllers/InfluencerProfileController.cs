@@ -41,8 +41,37 @@ namespace InfluencersPlatformBackend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateInfluencerProfile([FromBody] CreateInfluencerProfileRequestDTO newInfluencerProfileRequest)
         {
+            var User = await _context.Users.FindAsync(newInfluencerProfileRequest.UserId);
+            if (User == null)
+            {
+                return NotFound(new
+                {
+                    message = "User not found."
+                });
+            }
+
+            if (User.Role != "Influencer")
+            {
+                // Return 422 Unprocessable Entity with a custom message
+                return UnprocessableEntity(new
+                {
+                    message = "User must have a permission to create Influencer Profile."
+                });
+            }
+
+            if (User.InfluencerProfileId != null)
+            {
+                // Return 422 Unprocessable Entity with a custom message
+                return UnprocessableEntity(new
+                {
+                    message = "User already has an Influencer Profile."
+                });
+            }
+
             var InfluencerProfile = newInfluencerProfileRequest.FromCreateInfluencerProfileRequestToInfluencerProfile();
             _context.InfluencerProfiles.Add(InfluencerProfile);
+            User.InfluencerProfile = InfluencerProfile;
+            User.InfluencerProfileId = InfluencerProfile.Id;
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetInfluencerProfile), new { id = InfluencerProfile.Id }, InfluencerProfile.ToInfluencerProfileDTO());
         }

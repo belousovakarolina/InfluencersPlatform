@@ -41,8 +41,7 @@ namespace InfluencersPlatformBackend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCompanyProfile([FromBody] CreateCompanyProfileRequestDTO newCompanyProfileRequest)
         {
-            //TODO: ar yra useris su tokiu user id?
-            //TODO: ar useris su tokiu user id turi role influencer?
+
             var User = await _context.Users.FindAsync(newCompanyProfileRequest.UserId);
             if (User == null)
             { 
@@ -60,8 +59,20 @@ namespace InfluencersPlatformBackend.Controllers
                     message = "User must have a permission to create Company Profile."
                 });
             }
+
+            if (User.CompanyProfileId != null)
+            {
+                // Return 422 Unprocessable Entity with a custom message
+                return UnprocessableEntity(new
+                {
+                    message = "User already has a Company Profile."
+                });
+            }
+
             var CompanyProfile = newCompanyProfileRequest.FromCreateCompanyProfileRequestToCompanyProfile();
             _context.CompanyProfiles.Add(CompanyProfile);
+            User.CompanyProfileId = CompanyProfile.Id;
+            User.CompanyProfile = CompanyProfile;
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCompanyProfile), new { id = CompanyProfile.Id }, CompanyProfile.ToCompanyProfileDTO());
         }
@@ -105,6 +116,7 @@ namespace InfluencersPlatformBackend.Controllers
             if (CompanyProfile == null) return NotFound();
 
             _context.CompanyProfiles.Remove(CompanyProfile);
+            //TODO: user??
             await _context.SaveChangesAsync();
 
             return NoContent();
