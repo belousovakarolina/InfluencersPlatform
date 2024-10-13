@@ -10,6 +10,8 @@ namespace InfluencersPlatformBackend.Mappers
             return new GetReviewRequestDTO
             {
                 Id = review.Id,
+                //TODO: jeigu influencer istrintas?
+                //TODO: jeigu company istrintas?
                 InfluencerId = review.InfluencerId,
                 Influencer = review.Influencer,
                 CompanyId = review.CompanyId,
