@@ -44,7 +44,7 @@ namespace InfluencersPlatformBackend.Controllers
         {
 
             var User = await _context.Users.FindAsync(newCompanyProfileRequest.UserId);
-            if (User == null)
+            if (User == null || User.IsDeleted)
             { 
                 return NotFound(new
                 {

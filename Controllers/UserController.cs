@@ -1,6 +1,7 @@
 ﻿using InfluencersPlatformBackend.Data;
 using InfluencersPlatformBackend.DTOs.UserDTOs;
 using InfluencersPlatformBackend.Mappers;
+using InfluencersPlatformBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
@@ -115,6 +116,7 @@ namespace InfluencersPlatformBackend.Controllers
 
             //TODO: taip pat i guess istrinti ir jo profili? 
             //kai trinu profili, tai profili istrinu, o useri pazymiu kaip is deleted
+
 
             // Save the changes to the database
             _context.Users.Update(User);

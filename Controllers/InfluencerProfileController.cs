@@ -42,7 +42,7 @@ namespace InfluencersPlatformBackend.Controllers
         public async Task<IActionResult> CreateInfluencerProfile([FromBody] CreateInfluencerProfileRequestDTO newInfluencerProfileRequest)
         {
             var User = await _context.Users.FindAsync(newInfluencerProfileRequest.UserId);
-            if (User == null)
+            if (User == null || User.IsDeleted)
             {
                 return NotFound(new
                 {
