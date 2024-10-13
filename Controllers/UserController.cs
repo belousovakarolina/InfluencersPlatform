@@ -22,7 +22,7 @@ namespace InfluencersPlatformBackend.Controllers
         public async Task<IActionResult> GetUser([FromRoute] int id)
         {
             var User = await _context.Users.FindAsync(id);
-            if (User == null)
+            if (User == null || User.IsDeleted)
                 return NotFound();
 
             return Ok(User.ToUserDTO());
@@ -32,7 +32,7 @@ namespace InfluencersPlatformBackend.Controllers
         public async Task<IActionResult> GetUserList()
         {
             var Users = await _context.Users
-                .Select(s => s.ToUserDTO()).ToListAsync();
+                .Where(u => !u.IsDeleted).Select(s => s.ToUserDTO()).ToListAsync();
 
             if (Users == null)
                 return NotFound();
@@ -112,6 +112,9 @@ namespace InfluencersPlatformBackend.Controllers
 
             // Mark the user as deleted
             User.IsDeleted = true;
+
+            //TODO: taip pat i guess istrinti ir jo profili? 
+            //kai trinu profili, tai profili istrinu, o useri pazymiu kaip is deleted
 
             // Save the changes to the database
             _context.Users.Update(User);

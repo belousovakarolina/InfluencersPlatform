@@ -114,7 +114,10 @@ namespace InfluencersPlatformBackend.Controllers
 
             if (InfluencerProfile == null) return NotFound();
 
+            var User = await _context.Users.FindAsync(InfluencerProfile.UserId);
+
             _context.InfluencerProfiles.Remove(InfluencerProfile);
+            User.IsDeleted = true;
             await _context.SaveChangesAsync();
 
             return NoContent();
