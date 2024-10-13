@@ -41,14 +41,20 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequestDTO newCategoryRequest)
+        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequestDTO categoryDTO)
         {
-            if (!ModelState.IsValid)
+            //the [Required] attribute already checked if the required attributes are present
+
+            if (categoryDTO.FollowersCountTo < categoryDTO.FollowersCountFrom)
             {
-                return BadRequest(ModelState); // Return validation errors if any
+                // Return 422 Unprocessable Entity with a custom message
+                return UnprocessableEntity(new
+                {
+                    message = "FollowersCountTo must be greater than or equal to FollowersCountFrom."
+                });
             }
 
-            var category = newCategoryRequest.FromCreateCategoryRequestToCategory();
+            var category = categoryDTO.FromCreateCategoryRequestToCategory();
              _context.Categories.Add(category);
              await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCategory), new { id = category.Id}, category.ToCategoryDTO());
@@ -57,6 +63,17 @@ namespace InfluencersPlatformBackend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateWholeCategory([FromRoute] int id, [FromBody] PutCategoryRequestDTO categoryDTO)
         {
+            //the [Required] attribute already checked if the required attributes are present
+
+            if (categoryDTO.FollowersCountTo < categoryDTO.FollowersCountFrom)
+            {
+                // Return 422 Unprocessable Entity with a custom message
+                return UnprocessableEntity(new
+                {
+                    message = "FollowersCountTo must be greater than or equal to FollowersCountFrom."
+                });
+            }
+
             var category = _context.Categories.FirstOrDefault(c => c.Id == id);
 
             if (category == null) return NotFound();
@@ -66,13 +83,51 @@ namespace InfluencersPlatformBackend.Controllers
             return Ok(category.ToCategoryDTO());
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateCategoryPartially([FromRoute] int id, [FromBody] PatchCategoryRequestDTO patchCategoryDTO)
+        {
+            if (patchCategoryDTO.FollowersCountTo < patchCategoryDTO.FollowersCountFrom)
+            {
+                // Return 422 Unprocessable Entity with a custom message
+                return UnprocessableEntity(new
+                {
+                    message = "FollowersCountTo must be greater than or equal to FollowersCountFrom."
+                });
+            }
+
+            // Retrieve the category from the database
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+
+            // If the category is not found, return 404 Not Found
+            if (category == null) return NotFound();
+
+            // Only update the fields that are not null in the patch request
+            category = patchCategoryDTO.FromPatchCategoryRequestToCategory(category);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            // Return the updated category
+            return Ok(category.ToCategoryDTO());
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory([FromRoute] int id)
         {
             var category = _context.Categories.FirstOrDefault(c => c.Id == id);
 
             if (category == null) return NotFound();
+           
             //TODO: if this category has influencers, move them to undefined category
+            // Check if the category has any influencers
+            if (category.Influencers.Any())
+            {
+                // Return 409 Conflict if the category has influencers
+                return Conflict(new
+                {
+                    message = "Cannot delete category because it contains influencers."
+                });
+            }
 
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();

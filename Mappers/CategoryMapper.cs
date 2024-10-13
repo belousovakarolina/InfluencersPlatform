@@ -35,5 +35,19 @@ namespace InfluencersPlatformBackend.Mappers
 
             return toUpdate;
         }
+
+        public static Category FromPatchCategoryRequestToCategory (this PatchCategoryRequestDTO patchCategoryRequest, Category toUpdate)
+        {
+            if (patchCategoryRequest.Name != null)
+                toUpdate.Name = patchCategoryRequest.Name;
+
+            if (patchCategoryRequest.FollowersCountFrom.HasValue)
+                toUpdate.FollowersCountFrom = (int)patchCategoryRequest.FollowersCountFrom;
+
+            if (patchCategoryRequest.FollowersCountTo.HasValue)
+                toUpdate.FollowersCountTo = (int)patchCategoryRequest.FollowersCountTo;
+
+            return toUpdate;
+        }
     }
 }
