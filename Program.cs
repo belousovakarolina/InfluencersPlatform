@@ -31,3 +31,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+//TODO: long request
+//TODO: human readable open api documentation
