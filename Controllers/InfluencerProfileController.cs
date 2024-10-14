@@ -70,9 +70,12 @@ namespace InfluencersPlatformBackend.Controllers
 
             var InfluencerProfile = newInfluencerProfileRequest.FromCreateInfluencerProfileRequestToInfluencerProfile();
             _context.InfluencerProfiles.Add(InfluencerProfile);
+            await _context.SaveChangesAsync();
+
             User.InfluencerProfile = InfluencerProfile;
             User.InfluencerProfileId = InfluencerProfile.Id;
             await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetInfluencerProfile), new { id = InfluencerProfile.Id }, InfluencerProfile.ToInfluencerProfileDTO());
         }
 
