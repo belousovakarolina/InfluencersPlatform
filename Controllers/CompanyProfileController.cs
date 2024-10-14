@@ -75,6 +75,8 @@ namespace InfluencersPlatformBackend.Controllers
             User.CompanyProfileId = CompanyProfile.Id;
             User.CompanyProfile = CompanyProfile;
             await _context.SaveChangesAsync();
+
+            Console.WriteLine("compnay profile id: ", CompanyProfile.Id, "baigesi");
             return CreatedAtAction(nameof(GetCompanyProfile), new { id = CompanyProfile.Id }, CompanyProfile.ToCompanyProfileDTO());
         }
 

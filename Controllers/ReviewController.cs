@@ -42,6 +42,8 @@ namespace InfluencersPlatformBackend.Controllers
         public async Task<IActionResult> CreateReview([FromBody] CreateReviewRequestDTO newReviewRequest)
         {
             var Review = newReviewRequest.FromCreateReviewRequestToReview();
+            Review.Influencer = _context.Users.FirstOrDefault(c => c.Id == Review.InfluencerId);
+            Review.Company = _context.Users.FirstOrDefault(c => c.Id == Review.CompanyId);
             _context.Reviews.Add(Review);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetReview), new { id = Review.Id }, Review.ToReviewDTO());
