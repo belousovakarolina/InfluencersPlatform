@@ -4,6 +4,7 @@ using InfluencersPlatformBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfluencersPlatformBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241012165258_AddedRolesToUserModel")]
+    partial class AddedRolesToUserModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,8 +71,7 @@ namespace InfluencersPlatformBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("CompanyProfiles");
                 });
@@ -108,8 +110,7 @@ namespace InfluencersPlatformBackend.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("InfluencerProfiles");
                 });
@@ -174,15 +175,9 @@ namespace InfluencersPlatformBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CompanyProfileId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("InfluencerProfileId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -199,7 +194,7 @@ namespace InfluencersPlatformBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("Roles")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -211,8 +206,8 @@ namespace InfluencersPlatformBackend.Migrations
             modelBuilder.Entity("InfluencersPlatformBackend.Models.CompanyProfile", b =>
                 {
                     b.HasOne("InfluencersPlatformBackend.Models.User", "User")
-                        .WithOne("CompanyProfile")
-                        .HasForeignKey("InfluencersPlatformBackend.Models.CompanyProfile", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -226,8 +221,8 @@ namespace InfluencersPlatformBackend.Migrations
                         .HasForeignKey("CategoryId");
 
                     b.HasOne("InfluencersPlatformBackend.Models.User", "User")
-                        .WithOne("InfluencerProfile")
-                        .HasForeignKey("InfluencersPlatformBackend.Models.InfluencerProfile", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -276,15 +271,6 @@ namespace InfluencersPlatformBackend.Migrations
             modelBuilder.Entity("InfluencersPlatformBackend.Models.InfluencerProfile", b =>
                 {
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("InfluencersPlatformBackend.Models.User", b =>
-                {
-                    b.Navigation("CompanyProfile")
-                        .IsRequired();
-
-                    b.Navigation("InfluencerProfile")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -1,10 +1,10 @@
-﻿using System.Runtime.InteropServices;
+﻿using InfluencersPlatformBackend.Models;
 
-namespace InfluencersPlatformBackend.Models
+namespace InfluencersPlatformBackend.DTOs.ReviewDTOs
 {
-    public class Review
+    public class GetReviewRequestDTO
     {
-        public  int Id { get; set; }
+        public int Id { get; set; }
         public int InfluencerId { get; set; } //of a user, not a profile
         public User? Influencer { get; set; }
         public int CompanyId { get; set; } //of a user, not a profile
@@ -15,8 +15,8 @@ namespace InfluencersPlatformBackend.Models
         public bool Verified { get; set; }
         public bool IsAboutInfluencer { get; set; } //is this review from a company about 
         //a influencer or vice versa?
-        public DateTime CreatedDate {  get; set; } =  DateTime.Now; 
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-        public Review() { }
+        public GetReviewRequestDTO() { }
     }
 }
