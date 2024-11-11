@@ -1,10 +1,11 @@
 ﻿using InfluencersPlatformBackend.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace InfluencersPlatformBackend.Data
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<User>
     {
         public ApplicationDBContext(DbContextOptions dbContextOptions) :base(dbContextOptions) { }
 
@@ -25,6 +26,7 @@ namespace InfluencersPlatformBackend.Data
                 .HasForeignKey<InfluencerProfile>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade); // Enables cascade delete
 
+            //TODO: ar mano useriai yra trinami? ar ju profiles yra trinami? kaip su komentaru istorija?
             // One-to-one relationship between User and CompanyProfile
             modelBuilder.Entity<User>()
                 .HasOne(u => u.CompanyProfile)
