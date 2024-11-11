@@ -72,7 +72,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateWholeUser([FromRoute] int id, [FromBody] PutUserRequestDTO UserDTO)
+        public async Task<IActionResult> UpdateWholeUser([FromRoute] string id, [FromBody] PutUserRequestDTO UserDTO)
         {
 
             var User = _context.Users.FirstOrDefault(c => c.Id == id);
@@ -85,7 +85,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateUserPartially([FromRoute] int id, [FromBody] PatchUserRequestDTO patchUserDTO)
+        public async Task<IActionResult> UpdateUserPartially([FromRoute] string id, [FromBody] PatchUserRequestDTO patchUserDTO)
         {
             // Retrieve the User from the database
             var User = await _context.Users.FirstOrDefaultAsync(c => c.Id == id);
@@ -104,7 +104,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        public async Task<IActionResult> DeleteUser([FromRoute] string id)
         {
             var User = _context.Users.FirstOrDefault(c => c.Id == id);
 

@@ -52,7 +52,7 @@ namespace InfluencersPlatformBackend.Controllers
                 });
             }
 
-            if (User.Role != "Company")
+            /*if (User.Role != "Company")
             {
                 // Return 422 Unprocessable Entity with a custom message
                 return UnprocessableEntity(new
@@ -68,7 +68,7 @@ namespace InfluencersPlatformBackend.Controllers
                 {
                     message = "User already has a Company Profile."
                 });
-            }
+            }*/
 
             var CompanyProfile = newCompanyProfileRequest.FromCreateCompanyProfileRequestToCompanyProfile();
             _context.CompanyProfiles.Add(CompanyProfile);

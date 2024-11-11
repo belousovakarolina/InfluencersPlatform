@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InfluencersPlatformBackend.Models
 {
@@ -6,8 +7,9 @@ namespace InfluencersPlatformBackend.Models
     {
         public  int Id { get; set; }
         // One-to-one relationship with User
+        [Required]
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public virtual User User { get; set; }
         public int? CategoryId { get; set; }
         public Category? Category { get; set; }

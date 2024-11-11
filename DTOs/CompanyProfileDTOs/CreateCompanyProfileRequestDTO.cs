@@ -6,7 +6,7 @@ namespace InfluencersPlatformBackend.DTOs.CompanyProfileDTOs
     public class CreateCompanyProfileRequestDTO
     {
         [Required(ErrorMessage = "UserId is required")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }

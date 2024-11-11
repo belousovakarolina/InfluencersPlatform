@@ -4,7 +4,7 @@ namespace InfluencersPlatformBackend.DTOs.InfluencerProfileDTOs
 {
     public class CreateInfluencerProfileRequestDTO
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int? CategoryId { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }

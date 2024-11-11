@@ -19,7 +19,7 @@ namespace InfluencersPlatformBackend.Models
         // One-to-one relationship with CompanyProfile (nullable)
         public int? CompanyProfileId { get; set; }
         public virtual CompanyProfile CompanyProfile { get; set; }
-        public string Role { get; set; } //Administrator, Influencer, Company
+        //public string Role { get; set; } //Administrator, Influencer, Company
 
         public User() { }
     }

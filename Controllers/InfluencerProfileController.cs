@@ -50,14 +50,14 @@ namespace InfluencersPlatformBackend.Controllers
                 });
             }
 
-            if (User.Role != "Influencer")
+            /*if (User.Role != "Influencer")
             {
                 // Return 422 Unprocessable Entity with a custom message
                 return UnprocessableEntity(new
                 {
                     message = "User must have a permission to create Influencer Profile."
                 });
-            }
+            }*/
 
             if (User.InfluencerProfileId != null)
             {
