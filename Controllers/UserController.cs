@@ -40,8 +40,9 @@ namespace InfluencersPlatformBackend.Controllers
 
             return Ok(Users);
         }
+        //TODO: Do i need these methods?
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDTO newUserRequest)
         {
             if (newUserRequest.Role != "Administrator" && 
@@ -101,7 +102,7 @@ namespace InfluencersPlatformBackend.Controllers
 
             // Return the updated User
             return Ok(User.ToUserDTO());
-        }
+        }*/
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser([FromRoute] string id)

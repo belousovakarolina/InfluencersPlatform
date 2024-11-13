@@ -1,3 +1,4 @@
+using InfluencersPlatformBackend.Auth;
 using InfluencersPlatformBackend.Data;
 using InfluencersPlatformBackend.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,6 +21,9 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddTransient<JwtTokenService>();
+builder.Services.AddScoped<AuthSeeder>();
+
 builder.Services.AddIdentity<User, IdentityRole>().
     AddEntityFrameworkStores<ApplicationDBContext>().
     AddDefaultTokenProviders();
@@ -41,6 +45,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+var dbSeeder = scope.ServiceProvider.GetRequiredService<AuthSeeder>();
+await dbSeeder.SeedAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
