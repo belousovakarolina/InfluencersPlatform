@@ -20,11 +20,11 @@ namespace InfluencersPlatformBackend.Mappers
             };
         }
 
-        public static InfluencerProfile FromCreateInfluencerProfileRequestToInfluencerProfile (this CreateInfluencerProfileRequestDTO influencerDTO)
+        public static InfluencerProfile FromCreateInfluencerProfileRequestToInfluencerProfile (this CreateInfluencerProfileRequestDTO influencerDTO, string userId)
         {
             return new InfluencerProfile
             {
-                UserId = influencerDTO.UserId,
+                UserId = userId,
                 CategoryId = influencerDTO.CategoryId,
                 Name = influencerDTO.Name,
                 Description = influencerDTO.Description,

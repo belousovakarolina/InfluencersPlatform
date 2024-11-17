@@ -1,19 +1,23 @@
-﻿using InfluencersPlatformBackend.DTOs.UserDTOs;
+﻿using InfluencersPlatformBackend.Auth;
+using InfluencersPlatformBackend.DTOs.UserDTOs;
 using InfluencersPlatformBackend.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Runtime.CompilerServices;
 
 namespace InfluencersPlatformBackend.Mappers
 {
     public static class UserMapper
     {
-        public static GetUserRequestDTO ToUserDTO (this User user)
+        public static async Task<GetUserRequestDTO> ToUserDTO (this User user, UserManager<User> userManager)
         {
+            var roles = await userManager.GetRolesAsync(user);
             return new GetUserRequestDTO
             {
                 Id = user.Id,
                 Email = user.Email,
                 InfluencerProfileId = user.InfluencerProfileId.HasValue ? (int)user.InfluencerProfileId : (int?)null,
-                CompanyProfileId = user.CompanyProfileId.HasValue ? (int)user.CompanyProfileId : (int?)null
+                CompanyProfileId = user.CompanyProfileId.HasValue ? (int)user.CompanyProfileId : (int?)null,
+                Roles = string.Join(", ", roles)
             };
         }
 

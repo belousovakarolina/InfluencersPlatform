@@ -1,4 +1,6 @@
-﻿namespace InfluencersPlatformBackend.DTOs.UserDTOs
+﻿using InfluencersPlatformBackend.Auth;
+
+namespace InfluencersPlatformBackend.DTOs.UserDTOs
 {
     public class GetUserRequestDTO
     {
@@ -8,7 +10,7 @@
         public string Phone { get; set; }
         public int? InfluencerProfileId { get; set; } //profile, not a user
         public int? CompanyProfileId { get; set; } //profile, not a user
-        public string Role { get; set; }
+        public string Roles { get; set; }
         public GetUserRequestDTO() { }
     }
 }

@@ -22,6 +22,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 });
 
 builder.Services.AddTransient<JwtTokenService>();
+builder.Services.AddTransient<SessionService>();
 builder.Services.AddScoped<AuthSeeder>();
 
 builder.Services.AddIdentity<User, IdentityRole>().
@@ -49,8 +50,6 @@ var app = builder.Build();
 using var scope = app.Services.CreateScope();
 var dbSeeder = scope.ServiceProvider.GetRequiredService<AuthSeeder>();
 await dbSeeder.SeedAsync();
-
-app.AddAuthApi();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

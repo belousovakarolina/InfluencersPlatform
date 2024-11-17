@@ -10,10 +10,11 @@ namespace InfluencersPlatformBackend.Data
         public ApplicationDBContext(DbContextOptions dbContextOptions) :base(dbContextOptions) { }
 
         public DbSet<Review> Reviews { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; } //TODO: hmmm?
         public DbSet<InfluencerProfile> InfluencerProfiles { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CompanyProfile> CompanyProfiles { get; set; }
+        public DbSet<Session> Sessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

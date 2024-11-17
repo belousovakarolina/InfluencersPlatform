@@ -18,11 +18,11 @@ namespace InfluencersPlatformBackend.Mappers
             };
         }
 
-        public static CompanyProfile FromCreateCompanyProfileRequestToCompanyProfile(this CreateCompanyProfileRequestDTO createCompanyProfileRequest)
+        public static CompanyProfile FromCreateCompanyProfileRequestToCompanyProfile(this CreateCompanyProfileRequestDTO createCompanyProfileRequest, string userId)
         {
             return new CompanyProfile
             {
-                UserId = createCompanyProfileRequest.UserId,
+                UserId = userId,
                 Name = createCompanyProfileRequest.Name,
                 Description = createCompanyProfileRequest.Description,
                 YearlyIncome = createCompanyProfileRequest.YearlyIncome
