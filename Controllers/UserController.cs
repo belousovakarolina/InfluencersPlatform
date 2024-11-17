@@ -86,7 +86,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(UserManager<User> userManager, JwtTokenService jwtTokenService, [FromBody] LoginUserRequestDTO userDTO)
+        public async Task<IActionResult> Login(UserManager<User> userManager, JwtTokenService jwtTokenService, HttpContext httpContext, [FromBody] LoginUserRequestDTO userDTO)
         {
             //check user exists
             var user = await userManager.FindByNameAsync(userDTO.UserName);
@@ -101,7 +101,21 @@ namespace InfluencersPlatformBackend.Controllers
                 return UnprocessableEntity("Username or password is incorrect.");
 
             var roles = await userManager.GetRolesAsync(user);
+
+            var expiresAt = DateTime.UtcNow.AddDays(3);
             var accessToken = jwtTokenService.CreateAccessToken(user.UserName, user.Id, roles);
+            var refreshToken = jwtTokenService.CreateRefreshToken(user.Id, expiresAt);
+
+            var cookieOptions = new CookieOptions 
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Lax,
+                Expires = expiresAt
+                //Secure = true //TODO: when site has ssl, enable this so that it is https-only
+            };
+
+            httpContext.Response.Cookies.Append("RefreshToken", refreshToken, cookieOptions);
+
             return Ok(new SuccessfulLoginDTO(accessToken));
         }
 
