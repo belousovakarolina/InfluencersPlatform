@@ -32,7 +32,7 @@ namespace InfluencersPlatformBackend.Auth
             if (existingAdminUser == null)
             {
                 //TODO: change password to environment variable
-                var createAdminUserResult = await _userManager.CreateAsync(newAdminUser, "dummypwd");
+                var createAdminUserResult = await _userManager.CreateAsync(newAdminUser, "1D+dummypwd");
                 if (createAdminUserResult.Succeeded)
                 {
                     await _userManager.AddToRolesAsync(newAdminUser, UserRoles.All);

@@ -1,7 +1,9 @@
-﻿using InfluencersPlatformBackend.Data;
+﻿using InfluencersPlatformBackend.Auth;
+using InfluencersPlatformBackend.Data;
 using InfluencersPlatformBackend.DTOs.UserDTOs;
 using InfluencersPlatformBackend.Mappers;
 using InfluencersPlatformBackend.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
@@ -11,7 +13,7 @@ namespace InfluencersPlatformBackend.Controllers
 {
     [Route("api/v1/user")]
     [ApiController]
-    public class UserController: ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
         public UserController(ApplicationDBContext context)
@@ -40,20 +42,13 @@ namespace InfluencersPlatformBackend.Controllers
 
             return Ok(Users);
         }
-        //TODO: Do i need these methods?
 
-        /*[HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDTO newUserRequest)
+        [HttpPost]
+        [Route("")]
+        public async Task<IActionResult> CreateUser(UserManager<User> userManager, [FromBody] CreateUserRequestDTO userDTO)
         {
-            if (newUserRequest.Role != "Administrator" && 
-                newUserRequest.Role != "Influencer" &&
-                newUserRequest.Role != "Company")
-                return UnprocessableEntity(new
-                {
-                    message = "User must be one of these roles: Administrator, Influencer, Company."
-                });
-
-            if (!newUserRequest.Phone.StartsWith("3706") |
+            //TOD: duomenu patikra
+            /*if (!newUserRequest.Phone.StartsWith("3706") |
                 newUserRequest.Phone.Length != 11)
                 return UnprocessableEntity(new
                 {
@@ -64,45 +59,86 @@ namespace InfluencersPlatformBackend.Controllers
                 return UnprocessableEntity(new
                 {
                     message = "Email must not have blank spaces, must have '@' symbol and a domain ending."
-                });
+                });*/
 
-            var User = newUserRequest.FromCreateUserRequestToUser();
-            _context.Users.Add(User);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetUser), new { id = User.Id }, User.ToUserDTO());
+            //check user exists
+            var user = await userManager.FindByNameAsync(userDTO.UserName);
+            if (user != null)
+            {
+                return UnprocessableEntity("Username already taken.");
+            }
+
+            var newUser = new User()
+            {
+                Email = userDTO.Email,
+                UserName = userDTO.UserName
+            };
+
+            //TODO: wrap creation and role addition in one transaction
+            var createUserResult = await userManager.CreateAsync(newUser, userDTO.Password);
+            if (!createUserResult.Succeeded)
+                return UnprocessableEntity();
+
+            await userManager.AddToRoleAsync(newUser, UserRoles.Influencer);
+            //TODO: create method for creating company
+
+            return Created();
+        }
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login(UserManager<User> userManager, JwtTokenService jwtTokenService, [FromBody] LoginUserRequestDTO userDTO)
+        {
+            //check user exists
+            var user = await userManager.FindByNameAsync(userDTO.UserName);
+            if (user == null)
+            {
+                return UnprocessableEntity("User does not exist.");
+            }
+
+            var isPasswordValid = await userManager.CheckPasswordAsync(user, userDTO.Password);
+            if (!isPasswordValid)
+                //TODO: 401 Unauthorized
+                return UnprocessableEntity("Username or password is incorrect.");
+
+            var roles = await userManager.GetRolesAsync(user);
+            var accessToken = jwtTokenService.CreateAccessToken(user.UserName, user.Id, roles);
+            return Ok(new SuccessfulLoginDTO(accessToken));
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateWholeUser([FromRoute] string id, [FromBody] PutUserRequestDTO UserDTO)
-        {
+//TODO: Do i need these methods?
+/*
 
-            var User = _context.Users.FirstOrDefault(c => c.Id == id);
+[HttpPut("{id}")]
+public async Task<IActionResult> UpdateWholeUser([FromRoute] string id, [FromBody] PutUserRequestDTO UserDTO)
+{
 
-            if (User == null) return NotFound();
+    var User = _context.Users.FirstOrDefault(c => c.Id == id);
 
-            User = UserDTO.FromPutUserRequestToUser(User);
-            await _context.SaveChangesAsync();
-            return Ok(User.ToUserDTO());
-        }
+    if (User == null) return NotFound();
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateUserPartially([FromRoute] string id, [FromBody] PatchUserRequestDTO patchUserDTO)
-        {
-            // Retrieve the User from the database
-            var User = await _context.Users.FirstOrDefaultAsync(c => c.Id == id);
+    User = UserDTO.FromPutUserRequestToUser(User);
+    await _context.SaveChangesAsync();
+    return Ok(User.ToUserDTO());
+}
 
-            // If the User is not found, return 404 Not Found
-            if (User == null) return NotFound();
+[HttpPatch("{id}")]
+public async Task<IActionResult> UpdateUserPartially([FromRoute] string id, [FromBody] PatchUserRequestDTO patchUserDTO)
+{
+    // Retrieve the User from the database
+    var User = await _context.Users.FirstOrDefaultAsync(c => c.Id == id);
 
-            // Only update the fields that are not null in the patch request
-            User = patchUserDTO.FromPatchUserRequestToUser(User);
+    // If the User is not found, return 404 Not Found
+    if (User == null) return NotFound();
 
-            // Save changes to the database
-            await _context.SaveChangesAsync();
+    // Only update the fields that are not null in the patch request
+    User = patchUserDTO.FromPatchUserRequestToUser(User);
 
-            // Return the updated User
-            return Ok(User.ToUserDTO());
-        }*/
+    // Save changes to the database
+    await _context.SaveChangesAsync();
+
+    // Return the updated User
+    return Ok(User.ToUserDTO());
+}*/
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser([FromRoute] string id)

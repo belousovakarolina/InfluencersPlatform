@@ -26,7 +26,7 @@ namespace InfluencersPlatformBackend.Auth
                 new Claim(JwtRegisteredClaimNames.Sub, userId)
             };
 
-            authClaims.AddRange(roles.Select(o => new Claim(ClaimTypes.Role, o)));
+            authClaims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var token = new JwtSecurityToken(
                 issuer: _issuer,
@@ -38,5 +38,6 @@ namespace InfluencersPlatformBackend.Auth
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }
