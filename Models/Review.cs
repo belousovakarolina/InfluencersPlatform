@@ -21,6 +21,5 @@ namespace InfluencersPlatformBackend.Models
         public DateTime CreatedDate {  get; set; } =  DateTime.Now; 
 
         public Review() { }
-        //TODO: kaip su adminu reviewais? kur jie turetu eiti?
     }
 }

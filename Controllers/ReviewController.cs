@@ -4,6 +4,7 @@ using InfluencersPlatformBackend.DTOs.ReviewDTOs;
 using InfluencersPlatformBackend.Mappers;
 using InfluencersPlatformBackend.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,27 +23,45 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize] //TODO: influencers can see reviews on a company profile list but cannot see associated influencer
-        public async Task<IActionResult> GetReview([FromRoute] int id)
+        [Authorize] 
+        public async Task<IActionResult> GetReview(UserManager<User> userManager, [FromRoute] int id)
         {
             var Review = await _context.Reviews.FindAsync(id);
             if (Review == null)
                 return NotFound();
 
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var user = await userManager.FindByIdAsync(userId);
+            var roles = await userManager.GetRolesAsync(user);
+            if (!roles.Contains(UserRoles.Influencer) && !roles.Contains(UserRoles.Admin))
+                return Ok(Review.ToReviewDTOForInfluencer());
+
             return Ok(Review.ToReviewDTO());
         }
 
         [HttpGet]
-        [Authorize] //TODO: influencers can see reviews on a company profile list but cannot see associated influencer
-        public async Task<IActionResult> GetReviewList()
+        [Authorize]
+        public async Task<IActionResult> GetReviewList(UserManager<User> userManager)
         {
-            var Reviews = await _context.Reviews
-                .Select(s => s.ToReviewDTO()).ToListAsync();
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var user = await userManager.FindByIdAsync(userId);
+            var roles = await userManager.GetRolesAsync(user);
 
-            if (Reviews == null)
+            List<GetReviewRequestDTO> reviews;
+
+            if (!roles.Contains(UserRoles.Influencer) && !roles.Contains(UserRoles.Admin))
+            {
+                reviews = await _context.Reviews.Select(s => s.ToReviewDTOForInfluencer()).ToListAsync();
+            }
+            else
+            {
+                reviews = await _context.Reviews.Select(s => s.ToReviewDTO()).ToListAsync();
+            }
+
+            if (reviews == null)
                 return NotFound();
 
-            return Ok(Reviews);
+            return Ok(reviews);
         }
 
         [HttpPost]

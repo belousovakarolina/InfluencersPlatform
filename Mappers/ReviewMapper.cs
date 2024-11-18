@@ -22,6 +22,21 @@ namespace InfluencersPlatformBackend.Mappers
             };
         }
 
+        public static GetReviewRequestDTO ToReviewDTOForInfluencer(this Review review)
+        {
+            return new GetReviewRequestDTO
+            {
+                Id = review.Id,
+                CompanyId = review.Company == null ? "" : review.CompanyId,
+                Company = review.Company == null ? null : review.Company,
+                Name = review.Name,
+                Description = review.Description,
+                Stars = review.Stars,
+                Verified = review.Verified,
+                CreatedDate = review.CreatedDate
+            };
+        }
+
         public static Review FromCreateReviewRequestToReview (this CreateReviewRequestDTO reviewDTO)
         {
             return new Review
