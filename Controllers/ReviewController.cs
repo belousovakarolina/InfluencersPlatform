@@ -1,8 +1,13 @@
-﻿using InfluencersPlatformBackend.Data;
+﻿using InfluencersPlatformBackend.Auth;
+using InfluencersPlatformBackend.Data;
 using InfluencersPlatformBackend.DTOs.ReviewDTOs;
 using InfluencersPlatformBackend.Mappers;
+using InfluencersPlatformBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace InfluencersPlatformBackend.Controllers
 {
@@ -17,6 +22,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize] //TODO: influencers can see reviews on a company profile list but cannot see associated influencer
         public async Task<IActionResult> GetReview([FromRoute] int id)
         {
             var Review = await _context.Reviews.FindAsync(id);
@@ -27,6 +33,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet]
+        [Authorize] //TODO: influencers can see reviews on a company profile list but cannot see associated influencer
         public async Task<IActionResult> GetReviewList()
         {
             var Reviews = await _context.Reviews
@@ -39,6 +46,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{UserRoles.Company},{UserRoles.Influencer}")] //users who only have administrator role cannot create new reviews
         public async Task<IActionResult> CreateReview([FromBody] CreateReviewRequestDTO newReviewRequest)
         {
             var Review = newReviewRequest.FromCreateReviewRequestToReview();
@@ -50,11 +58,18 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateWholeReview([FromRoute] int id, [FromBody] PutReviewRequestDTO ReviewDTO)
         {
             var Review = _context.Reviews.FirstOrDefault(c => c.Id == id);
 
             if (Review == null) return NotFound();
+
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if (!this.HttpContext.User.IsInRole(UserRoles.Admin) && this.HttpContext.User.FindFirstValue(userId) != Review.UserId)
+            {
+                return Forbid("You cannot edit this resource.");
+            }
 
             Review = ReviewDTO.FromPutReviewRequestToReview(Review);
             await _context.SaveChangesAsync();
@@ -62,6 +77,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPatch("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateReviewPartially([FromRoute] int id, [FromBody] PatchReviewRequestDTO patchReviewDTO)
         {
 
@@ -70,6 +86,12 @@ namespace InfluencersPlatformBackend.Controllers
 
             // If the Review is not found, return 404 Not Found
             if (Review == null) return NotFound();
+
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if (!this.HttpContext.User.IsInRole(UserRoles.Admin) && this.HttpContext.User.FindFirstValue(userId) != Review.UserId)
+            {
+                return Forbid("You cannot edit this resource.");
+            }
 
             // Only update the fields that are not null in the patch request
             Review = patchReviewDTO.FromPatchReviewReqestToReview(Review);
@@ -82,11 +104,18 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteReview([FromRoute] int id)
         {
             var Review = _context.Reviews.FirstOrDefault(c => c.Id == id);
 
             if (Review == null) return NotFound();
+
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if (!this.HttpContext.User.IsInRole(UserRoles.Admin) && this.HttpContext.User.FindFirstValue(userId) != Review.UserId)
+            {
+                return Forbid("You cannot delete this resource.");
+            }
 
             _context.Reviews.Remove(Review);
             await _context.SaveChangesAsync();

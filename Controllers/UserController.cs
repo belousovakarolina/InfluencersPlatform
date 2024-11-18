@@ -3,6 +3,7 @@ using InfluencersPlatformBackend.Data;
 using InfluencersPlatformBackend.DTOs.UserDTOs;
 using InfluencersPlatformBackend.Mappers;
 using InfluencersPlatformBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> GetUser(UserManager<User> userManager, [FromRoute] int id)
         {
             var User = await _context.Users.FindAsync(id);
@@ -34,6 +36,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> GetUserList(UserManager<User> userManager)
         {
             // Retrieve all users first
@@ -62,7 +65,7 @@ namespace InfluencersPlatformBackend.Controllers
 
         [HttpPost]
         [Route("influencer")]
-        public async Task<IActionResult> CreateInfluencer(UserManager<User> userManager, [FromBody] CreateUserRequestDTO userDTO)
+        public async Task<IActionResult> CreateInfluencerUser(UserManager<User> userManager, [FromBody] CreateUserRequestDTO userDTO)
         {
             //TOD: duomenu patikra
             /*if (!newUserRequest.Phone.StartsWith("3706") |
@@ -102,7 +105,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
         [HttpPost]
         [Route("company")]
-        public async Task<IActionResult> CreateCompany(UserManager<User> userManager, [FromBody] CreateUserRequestDTO userDTO)
+        public async Task<IActionResult> CreateCompanyUser(UserManager<User> userManager, [FromBody] CreateUserRequestDTO userDTO)
         {
             //TOD: duomenu patikra
             /*if (!newUserRequest.Phone.StartsWith("3706") |
@@ -258,30 +261,41 @@ namespace InfluencersPlatformBackend.Controllers
 
         }
 
-        //TODO: update these methods as needed
-        /*
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateWholeUser([FromRoute] string id, [FromBody] PutUserRequestDTO UserDTO)
+        [Authorize]
+        public async Task<IActionResult> UpdateWholeUser(UserManager<User> userManager, [FromRoute] string id, [FromBody] PutUserRequestDTO UserDTO)
         {
 
             var User = _context.Users.FirstOrDefault(c => c.Id == id);
 
             if (User == null) return NotFound();
 
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if (!this.HttpContext.User.IsInRole(UserRoles.Admin) && this.HttpContext.User.FindFirstValue(userId) != User.Id)
+            {
+                return Forbid("You cannot edit this resource.");
+            }
+
             User = UserDTO.FromPutUserRequestToUser(User);
             await _context.SaveChangesAsync();
-            return Ok(User.ToUserDTO());
+            return Ok(User.ToUserDTO(userManager));
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateUserPartially([FromRoute] string id, [FromBody] PatchUserRequestDTO patchUserDTO)
+        [Authorize]
+        public async Task<IActionResult> UpdateUserPartially(UserManager<User> userManager, [FromRoute] string id, [FromBody] PatchUserRequestDTO patchUserDTO)
         {
             // Retrieve the User from the database
             var User = await _context.Users.FirstOrDefaultAsync(c => c.Id == id);
 
             // If the User is not found, return 404 Not Found
             if (User == null) return NotFound();
+
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if (!this.HttpContext.User.IsInRole(UserRoles.Admin) && this.HttpContext.User.FindFirstValue(userId) != User.Id)
+            {
+                return Forbid("You cannot edit this resource.");
+            }
 
             // Only update the fields that are not null in the patch request
             User = patchUserDTO.FromPatchUserRequestToUser(User);
@@ -290,16 +304,23 @@ namespace InfluencersPlatformBackend.Controllers
             await _context.SaveChangesAsync();
 
             // Return the updated User
-            return Ok(User.ToUserDTO());
-        }*/
+            return Ok(User.ToUserDTO(userManager));
+        }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser([FromRoute] string id)
         {
             var User = _context.Users.FirstOrDefault(c => c.Id == id);
 
             if (User == null || User.IsDeleted) 
                 return NotFound();
+
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if (!this.HttpContext.User.IsInRole(UserRoles.Admin) && this.HttpContext.User.FindFirstValue(userId) != User.Id)
+            {
+                return Forbid("You cannot  this resource.");
+            }
 
             // Mark the user as deleted
             User.IsDeleted = true;

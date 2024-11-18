@@ -23,6 +23,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{UserRoles.Company},{UserRoles.Admin}")]
         public async Task<IActionResult> GetInfluencerProfile([FromRoute] int id)
         {
             var InfluencerProfile = await _context.InfluencerProfiles.FindAsync(id);
@@ -33,6 +34,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{UserRoles.Company},{UserRoles.Admin}")]
         public async Task<IActionResult> GetInfluencerProfileList()
         {
             var InfluencerProfiles = await _context.InfluencerProfiles
@@ -45,11 +47,13 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = UserRoles.Influencer)]
         public async Task<IActionResult> CreateInfluencerProfile(UserManager<User> userManager, [FromBody] CreateInfluencerProfileRequestDTO newInfluencerProfileRequest)
         {
             string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
             var user = await userManager.FindByIdAsync(userId);
+            Console.WriteLine(user.UserName);
 
             if (user.InfluencerProfileId != null)
             {
@@ -126,7 +130,7 @@ namespace InfluencersPlatformBackend.Controllers
             string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             if (!this.HttpContext.User.IsInRole(UserRoles.Admin) && this.HttpContext.User.FindFirstValue(userId) != InfluencerProfile.UserId)
             {
-                return Forbid("You cannot edit this resource.");
+                return Forbid("You cannot delete this resource.");
             }
 
             var User = await _context.Users.FindAsync(InfluencerProfile.UserId);

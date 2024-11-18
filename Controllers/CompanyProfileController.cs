@@ -23,6 +23,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetCompanyProfile([FromRoute] int id)
         {
             var CompanyProfile = await _context.CompanyProfiles.FindAsync(id);
@@ -33,6 +34,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetCompanyProfileList()
         {
             var CompanyProfiles = await _context.CompanyProfiles
@@ -126,7 +128,7 @@ namespace InfluencersPlatformBackend.Controllers
             string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             if (!this.HttpContext.User.IsInRole(UserRoles.Admin) && this.HttpContext.User.FindFirstValue(userId) != CompanyProfile.UserId)
             {
-                return Forbid("You cannot edit this resource.");
+                return Forbid("You cannot delete this resource.");
             }
 
             var User = await _context.Users.FindAsync(CompanyProfile.UserId);
