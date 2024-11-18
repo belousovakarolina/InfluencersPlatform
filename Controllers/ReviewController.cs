@@ -64,28 +64,28 @@ namespace InfluencersPlatformBackend.Controllers
             return Ok(reviews);
         }
 
-        /*[HttpGet("company/{id}")]
+        [HttpGet("company/{id}")]
         [Authorize]
-        public async Task<IActionResult> GetReviewsForCompany([FromRoute] string companyId)
+        public async Task<IActionResult> GetReviewsForCompany(string id)
         {
-            if (string.IsNullOrEmpty(companyId))
+            if (string.IsNullOrEmpty(id))
             {
                 return BadRequest("Company ID is required.");
             }
             //TODO: if user role is influencer, hide influencer information
             //TODO: except if it is you who left the review
             var reviews = await _context.Reviews
-                .Where(r => r.CompanyId == companyId)
+                .Where(r => r.CompanyId == id)
                 .Select(r => r.ToReviewDTO())
                 .ToListAsync();
 
             if (reviews == null || !reviews.Any())
             {
-                return NotFound($"No reviews found for company with ID {companyId}.");
+                return NotFound($"No reviews found for company with ID {id}.");
             }
 
             return Ok(reviews);
-        }*/
+        }
 
         [HttpPost]
         [Authorize(Roles = $"{UserRoles.Company},{UserRoles.Influencer}")] //users who only have administrator role cannot create new reviews

@@ -67,6 +67,5 @@ app.MapControllers();
 
 app.Run();
 
-//TODO: long request
 //TODO: human readable open api documentation
 //TODO: Review. Kokia turëtø bûti struktûra, jei noriu susieti su vienu company ir vienu influencer?
