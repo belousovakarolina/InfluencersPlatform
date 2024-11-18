@@ -23,27 +23,47 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = $"{UserRoles.Company},{UserRoles.Admin}")]
+        [Authorize]
         public async Task<IActionResult> GetInfluencerProfile([FromRoute] int id)
         {
             var InfluencerProfile = await _context.InfluencerProfiles.FindAsync(id);
             if (InfluencerProfile == null)
                 return NotFound();
 
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if (!this.HttpContext.User.IsInRole(UserRoles.Admin) && !this.HttpContext.User.IsInRole(UserRoles.Company) && this.HttpContext.User.FindFirstValue(userId) != InfluencerProfile.UserId)
+            {
+                return Forbid("You cannot view this resource.");
+            }
+
             return Ok(InfluencerProfile.ToInfluencerProfileDTO());
         }
 
         [HttpGet]
-        [Authorize(Roles = $"{UserRoles.Company},{UserRoles.Admin}")]
+        [Authorize]
         public async Task<IActionResult> GetInfluencerProfileList()
         {
-            var InfluencerProfiles = await _context.InfluencerProfiles
-                .Select(s => s.ToInfluencerProfileDTO()).ToListAsync();
+            List<GetInfluencerProfileRequestDTO> influencerProfiles;
 
-            if (InfluencerProfiles == null)
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if (this.HttpContext.User.IsInRole(UserRoles.Influencer))
+            {
+                // If the user is an Influencer, only retrieve their profile
+                var influencerProfile = await _context.InfluencerProfiles
+                    .Where(ip => ip.UserId == userId)
+                    .Select(ip => ip.ToInfluencerProfileDTO())
+                    .FirstOrDefaultAsync();
+
+                if (influencerProfile == null)
+                    return NotFound("Profile not found.");
+
+                return Ok(new List<GetInfluencerProfileRequestDTO> { influencerProfile });
+            }
+            influencerProfiles = await _context.InfluencerProfiles.Select(s => s.ToInfluencerProfileDTO()).ToListAsync();
+            if (influencerProfiles == null)
                 return NotFound();
 
-            return Ok(InfluencerProfiles);
+            return Ok(influencerProfiles);
         }
 
         [HttpPost]

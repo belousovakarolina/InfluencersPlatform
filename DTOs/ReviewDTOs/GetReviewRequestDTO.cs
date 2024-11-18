@@ -5,9 +5,9 @@ namespace InfluencersPlatformBackend.DTOs.ReviewDTOs
     public class GetReviewRequestDTO
     {
         public int Id { get; set; }
-        public string InfluencerId { get; set; } //of a user, not a profile
+        public string? InfluencerId { get; set; } //of a user, not a profile
         public User? Influencer { get; set; }
-        public string CompanyId { get; set; } //of a user, not a profile
+        public string? CompanyId { get; set; } //of a user, not a profile
         public User? Company { get; set; }
         public string UserId { get; set; } //creator of the review
         public User? User { get; set; }

@@ -64,13 +64,43 @@ namespace InfluencersPlatformBackend.Controllers
             return Ok(reviews);
         }
 
+        /*[HttpGet("company/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetReviewsForCompany([FromRoute] string companyId)
+        {
+            if (string.IsNullOrEmpty(companyId))
+            {
+                return BadRequest("Company ID is required.");
+            }
+            //TODO: if user role is influencer, hide influencer information
+            //TODO: except if it is you who left the review
+            var reviews = await _context.Reviews
+                .Where(r => r.CompanyId == companyId)
+                .Select(r => r.ToReviewDTO())
+                .ToListAsync();
+
+            if (reviews == null || !reviews.Any())
+            {
+                return NotFound($"No reviews found for company with ID {companyId}.");
+            }
+
+            return Ok(reviews);
+        }*/
+
         [HttpPost]
         [Authorize(Roles = $"{UserRoles.Company},{UserRoles.Influencer}")] //users who only have administrator role cannot create new reviews
         public async Task<IActionResult> CreateReview([FromBody] CreateReviewRequestDTO newReviewRequest)
         {
-            var Review = newReviewRequest.FromCreateReviewRequestToReview();
+            string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID could not be determined from the token.");
+            }
+            Console.WriteLine("userid:", userId);
+            var Review = newReviewRequest.FromCreateReviewRequestToReview(userId);
             Review.Influencer = _context.Users.FirstOrDefault(c => c.Id == Review.InfluencerId);
             Review.Company = _context.Users.FirstOrDefault(c => c.Id == Review.CompanyId);
+            Review.User = _context.Users.FirstOrDefault(c => c.Id == Review.UserId);
             _context.Reviews.Add(Review);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetReview), new { id = Review.Id }, Review.ToReviewDTO());

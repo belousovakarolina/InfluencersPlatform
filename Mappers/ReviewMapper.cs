@@ -37,11 +37,11 @@ namespace InfluencersPlatformBackend.Mappers
             };
         }
 
-        public static Review FromCreateReviewRequestToReview (this CreateReviewRequestDTO reviewDTO)
+        public static Review FromCreateReviewRequestToReview (this CreateReviewRequestDTO reviewDTO, string userId)
         {
             return new Review
             {
-                UserId = reviewDTO.UserId,
+                UserId = userId,
                 InfluencerId = reviewDTO.InfluencerId,
                 CompanyId = reviewDTO.CompanyId,
                 Name = reviewDTO.Name,

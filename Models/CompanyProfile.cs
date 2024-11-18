@@ -7,7 +7,6 @@ namespace InfluencersPlatformBackend.Models
     {
         public  int Id { get; set; }
         // One-to-one relationship with User
-        [Required]
         [ForeignKey("User")]
         public string UserId { get; set; }
         public virtual User User { get; set; }
