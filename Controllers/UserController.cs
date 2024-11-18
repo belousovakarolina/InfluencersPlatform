@@ -156,8 +156,7 @@ namespace InfluencersPlatformBackend.Controllers
 
             var isPasswordValid = await userManager.CheckPasswordAsync(user, userDTO.Password);
             if (!isPasswordValid)
-                //TODO: 401 Unauthorized
-                return UnprocessableEntity("Username or password is incorrect.");
+                return Unauthorized("Username or password is incorrect.");
 
             var roles = await userManager.GetRolesAsync(user);
 

@@ -72,8 +72,7 @@ namespace InfluencersPlatformBackend.Controllers
             {
                 return BadRequest("Company ID is required.");
             }
-            //TODO: if user role is influencer, hide influencer information
-            //TODO: except if it is you who left the review
+            //TODO: if user role is influencer, hide influencer information, except if it is you who left the review
             var reviews = await _context.Reviews
                 .Where(r => r.CompanyId == id)
                 .Select(r => r.ToReviewDTO())

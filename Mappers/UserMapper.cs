@@ -47,5 +47,3 @@ namespace InfluencersPlatformBackend.Mappers
         }
     }
 }
-//TODO: all users dtos: delete unnecessary variables
-//TODO: add roles

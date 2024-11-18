@@ -132,7 +132,6 @@ namespace InfluencersPlatformBackend.Controllers
             // Check if the category has any influencers
             if (category.Influencers.Any())
             {
-                // Return 409 Conflict if the category has influencers
                 return Conflict(new
                 {
                     message = "Cannot delete category because it contains influencers."
