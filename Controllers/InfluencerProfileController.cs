@@ -40,8 +40,8 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetInfluencerProfileList()
+        [Authorize] 
+        public async Task<IActionResult> GetInfluencerProfileList() //TODO: for some reason, adminui nerodo viso listo influenceriu
         {
             List<GetInfluencerProfileRequestDTO> influencerProfiles;
 
