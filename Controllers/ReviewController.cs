@@ -86,6 +86,28 @@ namespace InfluencersPlatformBackend.Controllers
             return Ok(reviews);
         }
 
+        [HttpGet("influencer/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetReviewsForInfluencer(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest("Influencer ID is required.");
+            }
+            //TODO: if user role is influencer, hide influencer information, except if it is you who left the review
+            var reviews = await _context.Reviews
+                .Where(r => r.CompanyId == id)
+                .Select(r => r.ToReviewDTO())
+                .ToListAsync();
+
+            if (reviews == null || !reviews.Any())
+            {
+                return NotFound($"No reviews found for influencer with ID {id}.");
+            }
+
+            return Ok(reviews);
+        }
+
         [HttpPost]
         [Authorize(Roles = $"{UserRoles.Company},{UserRoles.Influencer}")] //users who only have administrator role cannot create new reviews
         public async Task<IActionResult> CreateReview([FromBody] CreateReviewRequestDTO newReviewRequest)

@@ -26,13 +26,15 @@ namespace InfluencersPlatformBackend.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = UserRoles.Admin)]
-        public async Task<IActionResult> GetUser(UserManager<User> userManager, [FromRoute] int id)
+        public async Task<IActionResult> GetUser(UserManager<User> userManager, [FromRoute] string id)
         {
             var User = await _context.Users.FindAsync(id);
             if (User == null || User.IsDeleted)
                 return NotFound();
 
-            return Ok(User.ToUserDTO(userManager));
+            var dto = await User.ToUserDTO(userManager);
+
+            return Ok(dto);
         }
 
         [HttpGet]
@@ -277,7 +279,7 @@ namespace InfluencersPlatformBackend.Controllers
 
             User = UserDTO.FromPutUserRequestToUser(User);
             await _context.SaveChangesAsync();
-            return Ok(User.ToUserDTO(userManager));
+            return Ok(await User.ToUserDTO(userManager));
         }
 
         [HttpPatch("{id}")]
@@ -303,7 +305,7 @@ namespace InfluencersPlatformBackend.Controllers
             await _context.SaveChangesAsync();
 
             // Return the updated User
-            return Ok(User.ToUserDTO(userManager));
+            return Ok(await User.ToUserDTO(userManager));
         }
 
         [HttpDelete("{id}")]

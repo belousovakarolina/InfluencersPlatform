@@ -45,9 +45,24 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+               .AllowAnyMethod()
+               .AllowCredentials()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
+
+/*var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+dbContext.Database.Migrate(); */
+
 var dbSeeder = scope.ServiceProvider.GetRequiredService<AuthSeeder>();
 await dbSeeder.SeedAsync();
 
@@ -65,7 +80,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseCors("AllowAll");
+
 app.Run();
 
 //TODO: human readable open api documentation
 //TODO: Review. Kokia turëtø bûti struktûra, jei noriu susieti su vienu company ir vienu influencer?
+//TODO: dabar pas mane visur editinant yra put'ai (updatina visa objecta). kaip reiktu padaryt, kad naudotu puta/patcha, kai jo reikia?
+
+
+//TODO: nerodyti create influencer, create company mygtuko, jei sitas zmogus ir negaletu to daikto creatinti.

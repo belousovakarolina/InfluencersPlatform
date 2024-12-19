@@ -41,12 +41,12 @@ namespace InfluencersPlatformBackend.Controllers
 
         [HttpGet]
         [Authorize] 
-        public async Task<IActionResult> GetInfluencerProfileList() //TODO: for some reason, adminui nerodo viso listo influenceriu
+        public async Task<IActionResult> GetInfluencerProfileList() 
         {
             List<GetInfluencerProfileRequestDTO> influencerProfiles;
 
             string userId = this.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            if (this.HttpContext.User.IsInRole(UserRoles.Influencer))
+            if (!HttpContext.User.IsInRole(UserRoles.Admin) && !HttpContext.User.IsInRole(UserRoles.Company))
             {
                 // If the user is an Influencer, only retrieve their profile
                 var influencerProfile = await _context.InfluencerProfiles
@@ -107,7 +107,7 @@ namespace InfluencersPlatformBackend.Controllers
             {
                 return Forbid("You cannot edit this resource.");
             }
-
+            var newProfile = InfluencerProfileDTO.FromPutInfluencerProfileRequestToInfluencerProfile(InfluencerProfile);
             InfluencerProfile = InfluencerProfileDTO.FromPutInfluencerProfileRequestToInfluencerProfile(InfluencerProfile);
             await _context.SaveChangesAsync();
             return Ok(InfluencerProfile.ToInfluencerProfileDTO());

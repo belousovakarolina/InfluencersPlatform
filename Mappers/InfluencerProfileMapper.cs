@@ -39,9 +39,9 @@ namespace InfluencersPlatformBackend.Mappers
             toUpdate.CategoryId = influencerDTO.CategoryId;
             toUpdate.Name = influencerDTO.Name;
             toUpdate.Description = influencerDTO.Description;
-            toUpdate.FbFollowerCount = toUpdate.FbFollowerCount;
-            toUpdate.IgFollowerCount = toUpdate .IgFollowerCount;
-            toUpdate.TiktokFollowerCount = toUpdate?.TiktokFollowerCount;
+            toUpdate.FbFollowerCount = influencerDTO.FbFollowerCount;
+            toUpdate.IgFollowerCount = influencerDTO.IgFollowerCount;
+            toUpdate.TiktokFollowerCount = influencerDTO.TiktokFollowerCount;
 
             return toUpdate;
         }
