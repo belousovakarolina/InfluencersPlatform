@@ -1,0 +1,1098 @@
+openapi: 3.0.1
+info:
+  title: InfluencersPlatformBackend
+  version: "1.0"
+servers:
+- url: /
+paths:
+  /api/v1/category/{id}:
+    get:
+      tags:
+      - Category
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+    put:
+      tags:
+      - Category
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutCategoryRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PutCategoryRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PutCategoryRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unproccessable Content
+    delete:
+      tags:
+      - Category
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "409":
+          description: Conflict
+    patch:
+      tags:
+      - Category
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchCategoryRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PatchCategoryRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PatchCategoryRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unproccessable Content
+  /api/v1/category:
+    get:
+      tags:
+      - Category
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+    post:
+      tags:
+      - Category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryRequestDTO'
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Content
+  /api/v1/companyprofile/{id}:
+    get:
+      tags:
+      - CompanyProfile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+    put:
+      tags:
+      - CompanyProfile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutCompanyProfileRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PutCompanyProfileRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PutCompanyProfileRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unproccessable Content
+    delete:
+      tags:
+      - CompanyProfile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+    patch:
+      tags:
+      - CompanyProfile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchCompanyProfileRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PatchCompanyProfileRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PatchCompanyProfileRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+  /api/v1/companyprofile:
+    get:
+      tags:
+      - CompanyProfile
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+    post:
+      tags:
+      - CompanyProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCompanyProfileRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateCompanyProfileRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateCompanyProfileRequestDTO'
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Content
+  /api/v1/influencerprofile/{id}:
+    get:
+      tags:
+      - InfluencerProfile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+    put:
+      tags:
+      - InfluencerProfile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutInfluencerProfileRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PutInfluencerProfileRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PutInfluencerProfileRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+    delete:
+      tags:
+      - InfluencerProfile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+    patch:
+      tags:
+      - InfluencerProfile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchInfluencerProfileRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PatchInfluencerProfileRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PatchInfluencerProfileRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+  /api/v1/influencerprofile:
+    get:
+      tags:
+      - InfluencerProfile
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+    post:
+      tags:
+      - InfluencerProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInfluencerProfileRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateInfluencerProfileRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateInfluencerProfileRequestDTO'
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Content
+  /api/v1/review/{id}:
+    get:
+      tags:
+      - Review
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+    put:
+      tags:
+      - Review
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutReviewRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PutReviewRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PutReviewRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+    delete:
+      tags:
+      - Review
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+    patch:
+      tags:
+      - Review
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchReviewRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PatchReviewRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PatchReviewRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+  /api/v1/review:
+    get:
+      tags:
+      - Review
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+    post:
+      tags:
+      - Review
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRequestDTO'
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+  /api/v1/review/company/{id}:
+    get:
+      tags:
+      - Review
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+  /api/v1/review/influencer/{id}:
+    get:
+      tags:
+      - Review
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+  /api/v1/user/{id}:
+    get:
+      tags:
+      - User
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+    put:
+      tags:
+      - User
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutUserRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PutUserRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PutUserRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+    delete:
+      tags:
+      - User
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+    patch:
+      tags:
+      - User
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchUserRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PatchUserRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PatchUserRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbid
+        "404":
+          description: Not Found
+  /api/v1/user:
+    get:
+      tags:
+      - User
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+  /api/v1/user/influencer:
+    post:
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequestDTO'
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Content
+  /api/v1/user/company:
+    post:
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequestDTO'
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Content
+  /api/v1/user/login:
+    post:
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserRequestDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserRequestDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/LoginUserRequestDTO'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Content
+  /api/v1/user/accessToken:
+    post:
+      tags:
+      - User
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Content
+  /api/v1/user/logout:
+    post:
+      tags:
+      - User
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Content
+components:
+  schemas:
+    CreateCategoryRequestDTO:
+      required:
+      - followersCountFrom
+      - followersCountTo
+      - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        followersCountFrom:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+          format: int32
+        followersCountTo:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+          format: int32
+      additionalProperties: false
+    CreateCompanyProfileRequestDTO:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        description:
+          type: string
+          nullable: true
+        yearlyIncome:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    CreateInfluencerProfileRequestDTO:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          format: int32
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        igFollowerCount:
+          type: integer
+          format: int32
+          nullable: true
+        fbFollowerCount:
+          type: integer
+          format: int32
+          nullable: true
+        tiktokFollowerCount:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+    CreateReviewRequestDTO:
+      type: object
+      properties:
+        influencerId:
+          type: string
+          nullable: true
+        companyId:
+          type: string
+          nullable: true
+        userId:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        stars:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+    CreateUserRequestDTO:
+      type: object
+      properties:
+        userName:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+      additionalProperties: false
+    LoginUserRequestDTO:
+      type: object
+      properties:
+        userName:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+      additionalProperties: false
+    PatchCategoryRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        followersCountFrom:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+          format: int32
+          nullable: true
+        followersCountTo:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+    PatchCompanyProfileRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        yearlyIncome:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    PatchInfluencerProfileRequestDTO:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          format: int32
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        igFollowerCount:
+          type: integer
+          format: int32
+          nullable: true
+        fbFollowerCount:
+          type: integer
+          format: int32
+          nullable: true
+        tiktokFollowerCount:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+    PatchReviewRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        stars:
+          type: integer
+          format: int32
+          nullable: true
+        verified:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    PatchUserRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        isDeleted:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    PutCategoryRequestDTO:
+      required:
+      - followersCountFrom
+      - followersCountTo
+      - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        followersCountFrom:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+          format: int32
+        followersCountTo:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+          format: int32
+      additionalProperties: false
+    PutCompanyProfileRequestDTO:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        description:
+          type: string
+          nullable: true
+        yearlyIncome:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    PutInfluencerProfileRequestDTO:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          format: int32
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        igFollowerCount:
+          type: integer
+          format: int32
+          nullable: true
+        fbFollowerCount:
+          type: integer
+          format: int32
+          nullable: true
+        tiktokFollowerCount:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+    PutReviewRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        stars:
+          type: integer
+          format: int32
+          nullable: true
+        verified:
+          type: boolean
+      additionalProperties: false
+    PutUserRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        isDeleted:
+          type: boolean
+      additionalProperties: false
