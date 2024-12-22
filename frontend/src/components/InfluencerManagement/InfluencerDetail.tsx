@@ -97,6 +97,7 @@ const InfluencerDetail: React.FC = () => {
     return <Alert severity="info">No influencer found with this ID.</Alert>;
   }
 
+
   return (
     <Card>
       <CardContent>

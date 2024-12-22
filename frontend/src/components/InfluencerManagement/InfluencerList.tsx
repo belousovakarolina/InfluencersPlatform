@@ -39,17 +39,15 @@ const InfluencerList: React.FC = () => {
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showCreateButton, setShowCreateButton] = useState<boolean>(false);
   const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:768px)'); // Check if screen width is <= 768px
 
-  // Retrieve roles from localStorage
-  const roles: string[] = JSON.parse(localStorage.getItem('roles') || '[]') as string[];
-
-  // Check if user has Administrator or Company role
-  const canCreateInfluencer = roles.includes('Influencer') || typeof roles === 'string';
-  console.log(typeof roles)
+    // Get the userId and roles from localStorage
+    const userId = localStorage.getItem('userId');
+    const roles = JSON.parse(localStorage.getItem('roles') || '[]') as string[];
 
   useEffect(() => {
     // Fetch the influencer data from the API
@@ -60,8 +58,12 @@ const InfluencerList: React.FC = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Error fetching influencer profiles:', err);
-        setError('Failed to fetch influencer profiles.');
+        if (err.response?.status === 404) {
+          // Handle 404 error
+          setShowCreateButton(true);
+        } else {
+          setError('Failed to fetch influencer profiles.');
+        }
         setLoading(false);
       });
   }, []);
@@ -96,8 +98,34 @@ const InfluencerList: React.FC = () => {
       });
   };
 
+    // Check if user has the "Influencer" role and no associated profile
+    const userHasInfluencerRole = roles.includes('Influencer');
+    const userHasInfluencerProfile = influencers.some((influencer) => influencer.userId === userId);
+  
+    const shouldShowCreateButton = userHasInfluencerRole && !userHasInfluencerProfile;
+
   if (loading && !isDeleteModalOpen) {
     return <CircularProgress />;
+  }
+
+  if (showCreateButton) {
+    return (
+      <Box textAlign="center" marginTop={4}>
+        <Typography variant="h6" gutterBottom>
+          No influencers found.
+        </Typography>
+        {shouldShowCreateButton && (
+  <Button
+    variant="contained"
+    color="primary"
+    onClick={() => navigate('/influencers/create')}
+    style={{ marginBottom: '1rem' }}
+  >
+    Create Influencer Profile
+  </Button>
+)}
+      </Box>
+    );
   }
 
   if (error) {
@@ -110,19 +138,6 @@ const InfluencerList: React.FC = () => {
         <Typography variant="h6" gutterBottom>
           Influencer List
         </Typography>
-
-        {/* Conditionally Render Create Influencer Button */}
-        {canCreateInfluencer && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate('/influencers/create')}
-            style={{ marginBottom: '1rem' }}
-          >
-            Create Influencer Profile
-          </Button>
-        )}
-
         {isMobile ? (
           <Grid container spacing={2}>
             {influencers.map((influencer) => (
@@ -136,9 +151,6 @@ const InfluencerList: React.FC = () => {
                 >
                   <Typography variant="body1">
                     <strong>ID:</strong> {influencer.id}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>User ID:</strong> {influencer.userId}
                   </Typography>
                   <Typography variant="body1">
                     <strong>Name:</strong> {influencer.name}
@@ -180,7 +192,6 @@ const InfluencerList: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Id</TableCell>
-                <TableCell>User Id</TableCell>
                 <TableCell>Category Id</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>
@@ -194,7 +205,6 @@ const InfluencerList: React.FC = () => {
               {influencers.map((influencer) => (
                 <TableRow key={influencer.id}>
                   <TableCell>{influencer.id}</TableCell>
-                  <TableCell>{influencer.userId}</TableCell>
                   <TableCell>{influencer.categoryId ?? 'N/A'}</TableCell>
                   <TableCell>{influencer.name}</TableCell>
                   <TableCell>{influencer.description || 'N/A'}</TableCell>
