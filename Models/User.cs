@@ -1,12 +1,15 @@
-﻿namespace InfluencersPlatformBackend.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace InfluencersPlatformBackend.Models
 {
-    public class User
+    public class User: IdentityUser
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string Phone { get; set; }
+        //by default in IdentityUser
+        //public int Id { get; set; }
+        //public string Name { get; set; }
+        //public string Email { get; set; }
+        //public string Password { get; set; }
+        //public string Phone { get; set; }
         public bool IsDeleted { get; set; }
 
         // One-to-one relationship with InfluencerProfile (nullable)
@@ -16,7 +19,7 @@
         // One-to-one relationship with CompanyProfile (nullable)
         public int? CompanyProfileId { get; set; }
         public virtual CompanyProfile CompanyProfile { get; set; }
-        public string Role { get; set; } //Administrator, Influencer, Company
+        //public string Role { get; set; } //Administrator, Influencer, Company
 
         public User() { }
     }

@@ -20,11 +20,11 @@ namespace InfluencersPlatformBackend.Mappers
             };
         }
 
-        public static InfluencerProfile FromCreateInfluencerProfileRequestToInfluencerProfile (this CreateInfluencerProfileRequestDTO influencerDTO)
+        public static InfluencerProfile FromCreateInfluencerProfileRequestToInfluencerProfile (this CreateInfluencerProfileRequestDTO influencerDTO, string userId)
         {
             return new InfluencerProfile
             {
-                UserId = influencerDTO.UserId,
+                UserId = userId,
                 CategoryId = influencerDTO.CategoryId,
                 Name = influencerDTO.Name,
                 Description = influencerDTO.Description,
@@ -39,9 +39,9 @@ namespace InfluencersPlatformBackend.Mappers
             toUpdate.CategoryId = influencerDTO.CategoryId;
             toUpdate.Name = influencerDTO.Name;
             toUpdate.Description = influencerDTO.Description;
-            toUpdate.FbFollowerCount = toUpdate.FbFollowerCount;
-            toUpdate.IgFollowerCount = toUpdate .IgFollowerCount;
-            toUpdate.TiktokFollowerCount = toUpdate?.TiktokFollowerCount;
+            toUpdate.FbFollowerCount = influencerDTO.FbFollowerCount;
+            toUpdate.IgFollowerCount = influencerDTO.IgFollowerCount;
+            toUpdate.TiktokFollowerCount = influencerDTO.TiktokFollowerCount;
 
             return toUpdate;
         }

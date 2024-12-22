@@ -1,7 +1,9 @@
-﻿using InfluencersPlatformBackend.Data;
+﻿using InfluencersPlatformBackend.Auth;
+using InfluencersPlatformBackend.Data;
 using InfluencersPlatformBackend.DTOs.CategoryDTOs;
 using InfluencersPlatformBackend.Mappers;
 using InfluencersPlatformBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetCategory([FromRoute] int id)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -29,6 +32,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetCategoryList()
         {
             var categories = await _context.Categories
@@ -41,14 +45,13 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequestDTO categoryDTO)
         {
             //TODO: sugalvoti kazkoki addinimo algoritma, kad pacheckintu, ar jau su tokiais skaiciais yra
-            //the [Required] attribute already checked if the required attributes are present
 
             if (categoryDTO.FollowersCountTo < categoryDTO.FollowersCountFrom)
             {
-                // Return 422 Unprocessable Entity with a custom message
                 return UnprocessableEntity(new
                 {
                     message = "FollowersCountTo must be greater than or equal to FollowersCountFrom."
@@ -62,6 +65,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> UpdateWholeCategory([FromRoute] int id, [FromBody] PutCategoryRequestDTO categoryDTO)
         {
             //the [Required] attribute already checked if the required attributes are present
@@ -85,6 +89,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpPatch("{id}")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> UpdateCategoryPartially([FromRoute] int id, [FromBody] PatchCategoryRequestDTO patchCategoryDTO)
         {
             if (patchCategoryDTO.FollowersCountTo < patchCategoryDTO.FollowersCountFrom)
@@ -113,6 +118,7 @@ namespace InfluencersPlatformBackend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> DeleteCategory([FromRoute] int id)
         {
             //TODO: cannot delete category 'undefined' (probably hardcode the id)
@@ -122,10 +128,10 @@ namespace InfluencersPlatformBackend.Controllers
            
             //TODO: if this category has influencers, move them to undefined category
             //and then delete the category I guess?
+
             // Check if the category has any influencers
             if (category.Influencers.Any())
             {
-                // Return 409 Conflict if the category has influencers
                 return Conflict(new
                 {
                     message = "Cannot delete category because it contains influencers."

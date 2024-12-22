@@ -10,29 +10,43 @@ namespace InfluencersPlatformBackend.Mappers
             return new GetReviewRequestDTO
             {
                 Id = review.Id,
-                InfluencerId = review.Influencer == null ? -1 : review.InfluencerId,
+                InfluencerId = review.Influencer == null ? "" : review.InfluencerId,
                 Influencer = review.Influencer == null? null : review.Influencer,
-                CompanyId = review.Company == null? -1 : review.CompanyId,
+                CompanyId = review.Company == null? "" : review.CompanyId,
                 Company = review.Company == null? null : review.Company,
                 Name = review.Name,
                 Description = review.Description,
                 Stars = review.Stars,
                 Verified = review.Verified,
-                IsAboutInfluencer = review.IsAboutInfluencer,
                 CreatedDate = review.CreatedDate
             };
         }
 
-        public static Review FromCreateReviewRequestToReview (this CreateReviewRequestDTO reviewDTO)
+        public static GetReviewRequestDTO ToReviewDTOForInfluencer(this Review review)
+        {
+            return new GetReviewRequestDTO
+            {
+                Id = review.Id,
+                CompanyId = review.Company == null ? "" : review.CompanyId,
+                Company = review.Company == null ? null : review.Company,
+                Name = review.Name,
+                Description = review.Description,
+                Stars = review.Stars,
+                Verified = review.Verified,
+                CreatedDate = review.CreatedDate
+            };
+        }
+
+        public static Review FromCreateReviewRequestToReview (this CreateReviewRequestDTO reviewDTO, string userId)
         {
             return new Review
             {
+                UserId = userId,
                 InfluencerId = reviewDTO.InfluencerId,
                 CompanyId = reviewDTO.CompanyId,
                 Name = reviewDTO.Name,
                 Description = reviewDTO.Description,
-                Stars = reviewDTO.Stars,
-                IsAboutInfluencer=reviewDTO.IsAboutInfluencer
+                Stars = reviewDTO.Stars
             };
         }
 
